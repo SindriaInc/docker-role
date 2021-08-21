@@ -1,0 +1,26 @@
+---
+# tasks file for docker-role
+- include_tasks: setup-ubuntu.yml
+
+- name: Install Docker.
+  apt:
+    pkg: 
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: "present"
+  notify: start docker
+
+- name: Ensure Docker is started and enabled at boot.
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name : Install docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64
+    tmp_dest: /tmp
+    dest: "{{ docker_compose_path }}"
+    force: yes #dowload every time, but replace dest only if changed.
+    mode: 0755

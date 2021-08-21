@@ -1,0 +1,15 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Test docker pkg install
+    apt:
+      name: docker-ce
+      state: latest
+    register: pkg_status
+
+  - name: Check docker pkg install
+    assert:
+      that: not pkg_status.changed
